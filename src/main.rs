@@ -11,6 +11,9 @@ fn main()
 
     loop
     {
+        screen.input();
+        screen.tick();
+        
         screen.canvas.set_draw_color(sdl2::pixels::Color::RGB(24, 24, 24));
         screen.canvas.clear();
 
