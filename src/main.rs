@@ -1,4 +1,19 @@
+mod video;
+
+use video::screen::*;
+
+const WIDTH: i32 = 800;
+const HEIGHT: i32 = 600;
+
 fn main()
 {
-    println!("hello, world!");
+    let mut screen = Screen::create(WIDTH, HEIGHT);
+
+    loop
+    {
+        screen.canvas.set_draw_color(sdl2::pixels::Color::RGB(24, 24, 24));
+        screen.canvas.clear();
+
+        screen.canvas.present();
+    }
 }
