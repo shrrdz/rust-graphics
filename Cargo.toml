@@ -1,0 +1,5 @@
+[package]
+name = "rust-graphics"
+authors = ["shredz"]
+version = "0.1.0"
+edition = "2021"
