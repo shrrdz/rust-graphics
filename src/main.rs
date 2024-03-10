@@ -1,22 +1,23 @@
 mod video;
 
-use video::screen::*;
+use video::{render::Render, screen::*};
 
 const WIDTH: i32 = 800;
 const HEIGHT: i32 = 600;
 
 fn main()
 {
-    let mut screen = Screen::create(WIDTH, HEIGHT);
+    let screen = Screen::create(WIDTH, HEIGHT);
+    
+    let mut render = Render::create(screen);
 
     loop
     {
-        screen.input();
-        screen.tick();
+        render.screen.input();
+        render.screen.tick();
         
-        screen.canvas.set_draw_color(sdl2::pixels::Color::RGB(24, 24, 24));
-        screen.canvas.clear();
+        render.clear(sdl2::pixels::Color::RGB(24, 24, 24));
 
-        screen.canvas.present();
+        render.update();
     }
 }
