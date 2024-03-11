@@ -25,4 +25,10 @@ impl Vertex
     {
         Self { x, y, color }
     }
+
+    // returns a scalar equal to the signed area of the given triangle (used for backface culling)
+    pub fn signed_triangle_area(a: &Vertex, b: &Vertex, c: &Vertex) -> f32
+    {
+        (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)
+    }
 }
