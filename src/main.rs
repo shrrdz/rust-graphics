@@ -1,4 +1,5 @@
 mod video;
+mod algebra;
 mod topology;
 
 use topology::{color::*, vertex::*};
