@@ -13,6 +13,8 @@ pub struct Screen
     pub sdl: sdl2::Sdl,
     pub canvas: Canvas<Window>,
     
+    pub depth_buffer: Vec<f32>,
+
     previous_tick: Instant,
     pub delta_time: f32,
 }
@@ -27,6 +29,10 @@ impl Screen
         let window = video.window("gl_rust", width as u32, height as u32).build().unwrap();
         let canvas = window.into_canvas().build().unwrap();
 
+        let mut depth_buffer = Vec::new();
+
+        depth_buffer.resize((width * height) as usize, 1.0);
+        
         Self
         {
             width,
@@ -34,6 +40,8 @@ impl Screen
             
             sdl,
             canvas,
+
+            depth_buffer,
 
             previous_tick: Instant::now(),
             delta_time: 0.0,

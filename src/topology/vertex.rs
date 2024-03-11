@@ -5,6 +5,7 @@ pub struct Vertex
 {
     pub x: f32,
     pub y: f32,
+    pub z: f32,
 
     pub color: Color,
 }
@@ -15,15 +16,15 @@ impl Vertex
     {
         Self
         {
-            x: 0.0, y: 0.0,
+            x: 0.0, y: 0.0, z: 0.0,
             
             color: Color::create(0.0, 0.0, 0.0),
         }
     }
 
-    pub fn create(x: f32, y: f32, color: Color) -> Self
+    pub fn create(x: f32, y: f32, z: f32, color: Color) -> Self
     {
-        Self { x, y, color }
+        Self { x, y, z, color }
     }
 
     // returns a scalar equal to the signed area of the given triangle (used for backface culling)

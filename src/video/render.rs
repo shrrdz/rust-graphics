@@ -22,16 +22,26 @@ impl Render
     
     pub fn clear(&mut self, color: sdl2::pixels::Color)
     {
+        for i in self.screen.depth_buffer.iter_mut()
+        {
+            *i = 1.0;
+        }
+        
         self.screen.canvas.set_draw_color(color);
         self.screen.canvas.clear();
     }
 
-    pub fn pixel(&mut self, x: i32, y: i32, color: Color)
+    pub fn pixel(&mut self, x: i32, y: i32, z: f32, color: Color)
     {
         if x >= 0 && x < self.screen.width && y >= 0 && y < self.screen.height
         {
-            self.screen.canvas.set_draw_color(sdl2::pixels::Color::RGB((color.r * 255.0) as u8, (color.g * 255.0) as u8, (color.b * 255.0) as u8));
-            self.screen.canvas.draw_point(Point::new(x, y)).unwrap();
+            // perform a depth test
+            if z < self.screen.depth_buffer[(self.screen.width * y + x) as usize]
+            {
+                self.screen.depth_buffer[(self.screen.width * y + x) as usize] = z;
+                self.screen.canvas.set_draw_color(sdl2::pixels::Color::RGB((color.r * 255.0) as u8, (color.g * 255.0) as u8, (color.b * 255.0) as u8));
+                self.screen.canvas.draw_point(Point::new(x, y)).unwrap();
+            }
         }
     }
 
@@ -61,10 +71,12 @@ impl Render
                 {
                     let mut frag: Vertex = Vertex::blank();
 
+                    // depth interpolation
+                    frag.z = a.z * alpha + b.z * beta + c.z * gamma;
                     // color interpolation
                     frag.color = a.color * alpha + b.color * beta + c.color * gamma;
                     
-                    self.pixel(x, y, frag.color);
+                    self.pixel(x, y, frag.z, frag.color);
                 }
             }
         }
