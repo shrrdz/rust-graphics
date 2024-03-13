@@ -63,3 +63,20 @@ impl std::ops::Mul<Color> for Color
         }
     }
 }
+
+impl std::ops::Div<f32> for Color
+{
+    type Output = Color;
+
+    fn div(self, scalar: f32) -> Color
+    {
+//      let scalar = scalar.max(0.0).min(1.0);
+
+        Color
+        {
+            r: self.r / scalar,
+            g: self.g / scalar,
+            b: self.b / scalar,
+        }
+    }
+}
