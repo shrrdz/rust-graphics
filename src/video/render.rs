@@ -1,18 +1,19 @@
-use super::screen::*;
-use crate::topology::{color::*, vertex::*};
+use super::{screen::*, view::*};
+use crate::{algebra::matrix4x4::*, topology::{mesh::*, part::*, color::*, vertex::*}};
 
 use sdl2::rect::Point;
 
 pub struct Render
 {
     pub screen: Screen,
+    pub view: View,
 }
 
 impl Render
 {
-    pub fn create(screen: Screen) -> Self
+    pub fn create(screen: Screen, view: View) -> Self
     {
-        Self { screen }
+        Self { screen, view }
     }
 
     pub fn update(&mut self)
@@ -50,6 +51,9 @@ impl Render
         // signed area of the triangle
         let area: f32 = Vertex::signed_triangle_area(a, b, c);
 
+        // perform backface culling
+        if area > 0.0 { return; }
+
         // bounding box of the triangle
         let xmin: i32 = f32::min(f32::min(a.x, b.x), c.x).floor() as i32;
         let xmax: i32 = f32::max(f32::max(a.x, b.x), c.x).floor() as i32;
@@ -82,6 +86,48 @@ impl Render
                     frag.color = frag.color / frag.one;
 
                     self.pixel(x, y, frag.z, frag.color);
+                }
+            }
+        }
+    }
+
+    pub fn process(&mut self, mesh: &mut Mesh)
+    {
+        mesh.update();
+        
+        let transformation_matrix: Matrix4x4 = self.view.perspective() * self.view.view() * mesh.model;
+
+        let mut vertices: Vec<Vertex> = mesh.vertices.clone();
+
+        // transform the vertices & their normals in 3D space
+        for vertex in &mut vertices
+        {
+            *vertex = vertex.transform(&transformation_matrix).image_space().screen_space();
+        }
+
+        for part in &mesh.parts
+        {
+            let mut start: usize = part.index;
+            
+            match part.topology
+            {
+                Topology::TRIANGLE =>
+                {
+                    for _ in 0 .. part.count
+                    {
+                        let mut a = mesh.vertices[mesh.indices[start]].transform(&transformation_matrix);
+                        let mut b = mesh.vertices[mesh.indices[start + 1]].transform(&transformation_matrix);
+                        let mut c = mesh.vertices[mesh.indices[start + 2]].transform(&transformation_matrix);
+
+                        a = vertices[mesh.indices[start]];
+                        b = vertices[mesh.indices[start + 1]];
+                        c = vertices[mesh.indices[start + 2]];
+
+                        // all vertices are now ready to be rendered
+                        self.triangle(&a, &b, &c);
+
+                        start += 3;
+                    }
                 }
             }
         }
