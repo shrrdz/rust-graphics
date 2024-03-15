@@ -14,7 +14,7 @@ fn main()
 
     let mut render = Render::create(screen, view);
 
-    let mut triangle: Mesh = Mesh::triangle();
+    let mut cube: Mesh = Mesh::cube();
 
     loop
     {
@@ -23,7 +23,7 @@ fn main()
         
         render.clear(sdl2::pixels::Color::RGB(24, 24, 24));
 
-        render.process(&mut triangle);
+        render.process(&mut cube);
         
         render.update();
     }

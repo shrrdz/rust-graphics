@@ -94,4 +94,79 @@ impl Mesh
 
         plane
     }
+
+    pub fn cube() -> Self
+    {
+        let mut cube = Self
+        { 
+            position: Vector3::zero(), rotation: Vector3::zero(), scale: Vector3::create(1.0, 1.0, 1.0),
+            vertices: Vec::new(), indices: Vec::new(), parts: Vec::new(),
+
+            model: Matrix4x4::identity(),
+        };
+
+        cube.vertices = vec!
+        [
+            // top
+            Vertex::create(-0.5, 0.5, -0.5, Color::create(0.8, 0.8, 0.8), 0.0, 0.0),
+            Vertex::create(0.5, 0.5, -0.5, Color::create(0.8, 0.8, 0.8), 1.0, 0.0),
+            Vertex::create(0.5, 0.5, 0.5, Color::create(0.8, 0.8, 0.8), 1.0, 1.0),
+            Vertex::create(-0.5, 0.5, 0.5, Color::create(0.8, 0.8, 0.8),0.0, 1.0),
+
+            // bottom
+            Vertex::create(-0.5, -0.5, 0.5, Color::create(0.2, 0.2, 0.2), 0.0, 0.0),
+            Vertex::create(0.5, -0.5, 0.5, Color::create(0.2, 0.2, 0.2), 1.0, 0.0),
+            Vertex::create(0.5, -0.5, -0.5, Color::create(0.2, 0.2, 0.2), 1.0, 1.0),
+            Vertex::create(-0.5, -0.5, -0.5, Color::create(0.2, 0.2, 0.2), 0.0, 1.0),
+
+            // front
+            Vertex::create(-0.5, -0.5, -0.5, Color::create(0.8, 0.2, 0.2), 0.0, 0.0),
+            Vertex::create(0.5, -0.5, -0.5, Color::create(0.8, 0.2, 0.2), 1.0, 0.0),
+            Vertex::create(0.5, 0.5, -0.5, Color::create(0.8, 0.2, 0.2), 1.0, 1.0),
+            Vertex::create(-0.5, 0.5, -0.5, Color::create(0.8, 0.2, 0.2), 0.0, 1.0),
+
+            // back
+            Vertex::create(0.5, -0.5, 0.5, Color::create(0.2, 0.8, 0.2), 0.0, 0.0),
+            Vertex::create(-0.5, -0.5, 0.5, Color::create(0.2, 0.8, 0.2), 1.0, 0.0),
+            Vertex::create(-0.5, 0.5, 0.5, Color::create(0.2, 0.8, 0.2), 1.0, 1.0),
+            Vertex::create(0.5, 0.5, 0.5, Color::create(0.2, 0.8, 0.2), 0.0, 1.0),
+
+            // left
+            Vertex::create(-0.5, -0.5, 0.5, Color::create(0.8, 0.8, 0.2), 0.0, 0.0),
+            Vertex::create(-0.5, -0.5, -0.5, Color::create(0.8, 0.8, 0.2), 1.0, 0.0),
+            Vertex::create(-0.5, 0.5, -0.5, Color::create(0.8, 0.8, 0.2), 1.0, 1.0),
+            Vertex::create(-0.5, 0.5, 0.5, Color::create(0.8, 0.8, 0.2), 0.0, 1.0),
+
+            // right
+            Vertex::create(0.5, -0.5, -0.5, Color::create(0.2, 0.2, 0.8), 0.0, 0.0),
+            Vertex::create(0.5, -0.5, 0.5, Color::create(0.2, 0.2, 0.8), 1.0, 0.0),
+            Vertex::create(0.5, 0.5, 0.5, Color::create(0.2, 0.2, 0.8), 1.0, 1.0),
+            Vertex::create(0.5, 0.5, -0.5, Color::create(0.2, 0.2, 0.8), 0.0, 1.0),
+        ];
+
+        cube.indices = vec!
+        [ 
+            0, 1, 2,
+            0, 2, 3,
+
+            4, 5, 6,
+            4, 6, 7,
+
+            8, 9, 10,
+            8, 10, 11,
+
+            12, 13, 14,
+            12, 14, 15,
+
+            16, 17, 18,
+            16, 18, 19,
+
+            20, 21, 22,
+            20, 22, 23,
+        ];
+
+        cube.parts = vec![Part::create(Topology::TRIANGLE, 0, 12)];
+
+        cube
+    }
 }
