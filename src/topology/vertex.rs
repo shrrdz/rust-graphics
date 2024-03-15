@@ -104,6 +104,21 @@ impl Vertex
         }
     }
 
+    // checks if a triangle is out of view
+    pub fn out_of_view(a: &Vertex, b: &Vertex, c: &Vertex) -> bool
+    {  
+        let left: bool = a.x < -a.w && b.x < -b.w && c.x < -c.w;
+        let right: bool = a.x > a.w && b.x > b.w && c.x > c.w;
+
+        let up: bool = a.y > a.w && b.y > b.w && c.y > c.w;
+        let down: bool = a.y < -a.w && b.y < -b.w && c.y < -c.w;
+
+        let far: bool = a.z > a.w && b.z > b.w && c.z > c.w;
+        let close: bool = a.z < 0.0 && b.z < 0.0 && c.z < 0.0;
+
+        left || right || up || down || far || close
+    }   
+
     // returns a scalar equal to the signed area of the given triangle (used for backface culling)
     pub fn signed_triangle_area(a: &Vertex, b: &Vertex, c: &Vertex) -> f32
     {

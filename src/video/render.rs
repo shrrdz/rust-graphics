@@ -119,13 +119,17 @@ impl Render
                         let mut b = mesh.vertices[mesh.indices[start + 1]].transform(&transformation_matrix);
                         let mut c = mesh.vertices[mesh.indices[start + 2]].transform(&transformation_matrix);
 
-                        a = vertices[mesh.indices[start]];
-                        b = vertices[mesh.indices[start + 1]];
-                        c = vertices[mesh.indices[start + 2]];
+                        // ensure that only the triangles that are within the view space are drawn
+                        if !Vertex::out_of_view(&a, &b, &c)
+                        {
+                            a = vertices[mesh.indices[start]];
+                            b = vertices[mesh.indices[start + 1]];
+                            c = vertices[mesh.indices[start + 2]];
 
-                        // all vertices are now ready to be rendered
-                        self.triangle(&a, &b, &c);
-
+                            // all vertices are now ready to be rendered
+                            self.triangle(&a, &b, &c);
+                        }
+                        
                         start += 3;
                     }
                 }

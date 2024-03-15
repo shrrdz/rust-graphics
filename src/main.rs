@@ -10,7 +10,7 @@ const HEIGHT: i32 = 600;
 fn main()
 {
     let screen = Screen::create(WIDTH, HEIGHT);
-    let view = View::create(&Vector3::create(0.0, 0.0, -1.0), &Vector3::create(0.0, 0.0, 0.0));
+    let view = View::create(&Vector3::create(0.0, 0.0, -2.0), &Vector3::create(0.0, 0.0, 0.0));
 
     let mut render = Render::create(screen, view);
 
