@@ -12,13 +12,13 @@ const HEIGHT: i32 = 600;
 fn main()
 {
     let screen = Screen::create(WIDTH, HEIGHT);
-    let view = View::create(&Vector3::create(0.0, 0.5, -2.0), &Vector3::create(0.0, 0.0, 0.0));
+    let mut view = View::create(&Vector3::create(0.0, 0.5, -2.0), &Vector3::create(0.0, 0.0, 0.0));
 
     let mut render = Render::create(screen);
 
     loop
     {
-        render.screen.input();
+        render.screen.input(&mut view);
         render.screen.tick();
         
         render.clear(sdl2::pixels::Color::RGB(24, 24, 24));

@@ -1,6 +1,10 @@
+use super::view::*;
+
 use std::time::{Instant, Duration};
 
-use sdl2::{video::Window, render::Canvas, event::Event, keyboard::Keycode};
+use sdl2::{video::Window, render::Canvas, event::Event, keyboard::{Keycode, Scancode}};
+
+const SPEED: f32 = 2.0;
 
 const FPS: u32 = 60;
 const TARGET_TICK: u32 = 1000 / FPS;
@@ -48,9 +52,23 @@ impl Screen
         }
     }
 
-    pub fn input(&self)
+    pub fn input(&self, view: &mut View)
     {
         let mut events = self.sdl.event_pump().unwrap();
+
+        let key = events.keyboard_state();
+
+        if key.is_scancode_pressed(Scancode::W) { view.translate(0.0, 0.0, SPEED * self.delta_time); }
+        if key.is_scancode_pressed(Scancode::S) { view.translate(0.0, 0.0, -SPEED * self.delta_time); }
+        if key.is_scancode_pressed(Scancode::A) { view.translate(-SPEED * self.delta_time, 0.0, 0.0); }
+        if key.is_scancode_pressed(Scancode::D) { view.translate(SPEED * self.delta_time, 0.0, 0.0); }
+        if key.is_scancode_pressed(Scancode::E) { view.translate(0.0, SPEED * self.delta_time, 0.0); }
+        if key.is_scancode_pressed(Scancode::Q) { view.translate(0.0, -SPEED * self.delta_time, 0.0); }
+
+        if key.is_scancode_pressed(Scancode::Left) { view.rotate(0.0, -30.0 * self.delta_time); }
+        if key.is_scancode_pressed(Scancode::Right) { view.rotate(0.0, 30.0 * self.delta_time); }
+        if key.is_scancode_pressed(Scancode::Up) { view.rotate(30.0 * self.delta_time, 0.0); }
+        if key.is_scancode_pressed(Scancode::Down) { view.rotate(-30.0 * self.delta_time, 0.0); } 
 
         for event in events.poll_iter()
         {
