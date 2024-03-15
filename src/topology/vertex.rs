@@ -9,6 +9,8 @@ pub struct Vertex
     pub z: f32,
     pub w: f32,
 
+    pub one: f32,
+
     pub color: Color,
 }
 
@@ -21,12 +23,14 @@ impl Vertex
             x: 0.0, y: 0.0, z: 0.0, w: 1.0,
             
             color: Color::create(0.0, 0.0, 0.0),
+
+            one: 1.0,
         }
     }
 
     pub fn create(x: f32, y: f32, z: f32, color: Color) -> Self
     {
-        Self { x, y, z, w: 1.0, color }
+        Self { x, y, z, w: 1.0, color, one: 1.0 }
     }
 
     // transforms the vertex into image space (NDC) using perspective division
@@ -47,6 +51,8 @@ impl Vertex
             w: 1.0,
             
             color: self.color / self.w,
+
+            one: self.one / self.w,
         }
     }
 
@@ -61,6 +67,8 @@ impl Vertex
             w: self.w,
             
             color: self.color,
+
+            one: self.one,
         }
     }
 
@@ -73,7 +81,7 @@ impl Vertex
             z: matrix.get(2, 0) * self.x + matrix.get(2, 1) * self.y + matrix.get(2, 2) * self.z + matrix.get(2, 3) * self.w,
             w: matrix.get(3, 0) * self.x + matrix.get(3, 1) * self.y + matrix.get(3, 2) * self.z + matrix.get(3, 3) * self.w,
 
-            color: self.color,
+            color: self.color, one: self.one,
         }
     }
 

@@ -75,7 +75,12 @@ impl Render
                     frag.z = a.z * alpha + b.z * beta + c.z * gamma;
                     // color interpolation
                     frag.color = a.color * alpha + b.color * beta + c.color * gamma;
+                    // reciprocal interpolation
+                    frag.one = a.one * alpha + b.one * beta + c.one * gamma;
                     
+                    // perspective-correct interpolation
+                    frag.color = frag.color / frag.one;
+
                     self.pixel(x, y, frag.z, frag.color);
                 }
             }
