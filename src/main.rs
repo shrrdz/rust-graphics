@@ -14,7 +14,7 @@ fn main()
 
     let mut render = Render::create(screen, view);
 
-    let mut cube: Mesh = Mesh::cube();
+    let mut mesh: Mesh = Mesh::sphere(40, 20, 1.0);
 
     loop
     {
@@ -23,7 +23,7 @@ fn main()
         
         render.clear(sdl2::pixels::Color::RGB(24, 24, 24));
 
-        render.process(&mut cube);
+        render.process(&mut mesh);
         
         render.update();
     }
