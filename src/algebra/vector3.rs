@@ -43,6 +43,14 @@ impl Vector3
         Self { x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z, z: v1.x * v2.y - v1.y * v2.x }
     }
 
+    pub fn reflect(incident: Vector3, normal: Vector3 ) -> Self
+    {
+        let twodot: f32 = 2.0 * Vector3::dot(&incident, &normal);
+        
+        let result: Vector3 = (incident - normal* twodot).normalized();
+
+        result
+    }
 }
 
 impl std::ops::Add for Vector3

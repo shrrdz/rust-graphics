@@ -1,4 +1,4 @@
-use super::{screen::*, view::*};
+use super::{screen::*, view::*, light::*};
 use crate::{algebra::matrix4x4::*, topology::{mesh::*, part::*, color::*, vertex::*}};
 
 use sdl2::rect::Point;
@@ -84,13 +84,15 @@ impl Render
                     // uv coordinates interpolation
                     frag.u = a.u * alpha + b.u * beta + c.u * gamma;
                     frag.v = a.v * alpha + b.v * beta + c.v * gamma;
+                    // normal interpolation
+                    frag.normal = a.normal * alpha + b.normal * beta + c.normal * gamma;
 
                     // perspective-correct interpolation
                     frag.color = frag.color / frag.one;
                     frag.u = frag.u / frag.one;
                     frag.v = frag.v / frag.one;
-
-                    self.pixel(x, y, frag.z, frag.color);
+                    
+                    self.pixel(x, y, frag.z, phong(&mut frag, &self.view));
                 }
             }
         }
@@ -108,6 +110,7 @@ impl Render
         for vertex in &mut vertices
         {
             *vertex = vertex.transform(&transformation_matrix).image_space().screen_space();
+            vertex.normal = vertex.transform_normal(&mesh.model);
         }
 
         for part in &mesh.parts
@@ -134,7 +137,7 @@ impl Render
                             // all vertices are now ready to be rendered
                             self.triangle(&a, &b, &c);
                         }
-                        
+
                         start += 3;
                     }
                 }

@@ -197,7 +197,7 @@ impl Mesh
                 let y: f32 = radius * f32::cos(theta);
                 let z: f32 = radius * f32::sin(theta) * f32::sin(phi);
 
-                sphere.vertices.push(Vertex::create(x, y, z, Color::create(0.8, 0.0, 0.0), segment as f32 / segments as f32, 1.0 - (ring as f32 / rings as f32)));
+                sphere.vertices.push(Vertex::full(x, y, z, Color::create(0.2, 0.4, 0.8), segment as f32 / segments as f32, 1.0 - (ring as f32 / rings as f32), Vector3::create(x, y, z).normalized()));
 
                 // indices
                 let current: usize = ring * (segments + 1) + segment;
