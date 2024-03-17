@@ -1,8 +1,8 @@
 use super::view::*;
 use crate::{algebra::vector3::*, topology::{color::*, vertex::*}};
 
-// Phong reflection
-pub fn phong(vt: &mut Vertex, view: &View) -> Color
+// Blinn-Phong reflection
+pub fn blinn_phong(vt: &mut Vertex, view: &View) -> Color
 {
     let normal: Vector3 = vt.normal.normalized();
 
@@ -20,9 +20,11 @@ pub fn phong(vt: &mut Vertex, view: &View) -> Color
     if lambertian != 0.0
     {
         let view_direction: Vector3 = (view.position - Vector3::create(vt.x, vt.y, vt.z)).normalized();
-        let reflect_direction: Vector3 = Vector3::reflect(light_direction.opposite(), normal);
+//      let reflect_direction: Vector3 = Vector3::reflect(&light_direction.opposite(), &normal);
+        let halfway: Vector3 = (view_direction + light_direction).normalized();
 
-        specular_highlight = f32::powf(f32::max(0.0, Vector3::dot(&view_direction, &reflect_direction)), specular_exponent);
+        specular_highlight = f32::powf(f32::max(0.0, Vector3::dot(&halfway, &normal)), specular_exponent);
+//      specular_highlight = f32::powf(f32::max(0.0, Vector3::dot(&view_direction, &reflect_direction)), specular_exponent);
     }
 
     let ambient: Color = vt.color * Color::create(0.1, 0.1, 0.1);

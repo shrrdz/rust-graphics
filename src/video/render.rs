@@ -92,7 +92,7 @@ impl Render
                     frag.u = frag.u / frag.one;
                     frag.v = frag.v / frag.one;
                     
-                    self.pixel(x, y, frag.z, phong(&mut frag, &self.view));
+                    self.pixel(x, y, frag.z, blinn_phong(&mut frag, &self.view));
                 }
             }
         }
