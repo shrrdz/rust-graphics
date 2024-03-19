@@ -1,4 +1,4 @@
-use super::{color::*, part::*, vertex::*};
+use super::{color::*, part::*, model::*, vertex::*};
 use crate::algebra::{matrix4x4::*, vector3::*};
 
 use std::f32::consts::PI;
@@ -42,6 +42,31 @@ impl Mesh
             Matrix4x4::rotate_y(self.rotation.y) *
             Matrix4x4::scale(self.scale.x, self.scale.y, self.scale.z)
         }
+    }
+
+    pub fn converted(model: &Model) -> Self
+    {
+        let mut mesh = Self
+        { 
+            position: Vector3::zero(),
+            rotation: Vector3::zero(),
+            scale: Vector3::create(1.0, 1.0, 1.0),
+
+            vertices: model.vertices.clone(),
+            indices: Vec::new(), 
+            parts: vec![Part::create(Topology::TRIANGLE, 0, model.vertices.len() / 3)],
+
+            model: Matrix4x4::identity(),
+        };
+
+        for i in 0..model.vertices.len() / 3
+        {
+            mesh.indices.push(i * 3);
+            mesh.indices.push(i * 3 + 1);
+            mesh.indices.push(i * 3 + 2);
+        }
+
+        mesh
     }
 
     pub fn calculate_normals(&mut self, opposite: bool)
