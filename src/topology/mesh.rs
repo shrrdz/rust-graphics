@@ -44,6 +44,27 @@ impl Mesh
         }
     }
 
+    pub fn calculate_normals(&mut self, opposite: bool)
+    {
+        for i in (0 .. self.indices.len()).step_by(3)
+        {
+            let a: Vertex = self.vertices[self.indices[i]];
+            let b: Vertex = self.vertices[self.indices[i + 1]];
+            let c: Vertex = self.vertices[self.indices[i + 2]];
+
+            let ab: Vector3 = Vector3::create(b.x - a.x, b.y - a.y, b.z - a.z);
+            let ac: Vector3 = Vector3::create(c.x - a.x, c.y - a.y, c.z - a.z);
+
+            let mut normal: Vector3 = Vector3::cross(&ab, &ac).normalized();
+
+            if opposite { normal = normal.opposite(); }
+
+            self.vertices[self.indices[i]].normal = normal;
+            self.vertices[self.indices[i + 1]].normal = normal;
+            self.vertices[self.indices[i + 2]].normal = normal;
+        }
+    }
+
     //--------------------------------------------------------------------------//
     //  primitives
     //--------------------------------------------------------------------------//
@@ -94,6 +115,8 @@ impl Mesh
 
         plane.parts = vec![Part::create(Topology::TRIANGLE, 0, 2)];
 
+        plane.calculate_normals(true);
+
         plane
     }
 
@@ -110,40 +133,40 @@ impl Mesh
         cube.vertices = vec!
         [
             // top
-            Vertex::create(-0.5, 0.5, -0.5, Color::create(0.8, 0.8, 0.8), 0.0, 0.0),
-            Vertex::create(0.5, 0.5, -0.5, Color::create(0.8, 0.8, 0.8), 1.0, 0.0),
-            Vertex::create(0.5, 0.5, 0.5, Color::create(0.8, 0.8, 0.8), 1.0, 1.0),
-            Vertex::create(-0.5, 0.5, 0.5, Color::create(0.8, 0.8, 0.8),0.0, 1.0),
+            Vertex::create(-0.5, 0.5, -0.5, Color::create(1.0, 0.0, 0.0), 0.0, 0.0),
+            Vertex::create(0.5, 0.5, -0.5, Color::create(1.0, 0.0, 0.0), 1.0, 0.0),
+            Vertex::create(0.5, 0.5, 0.5, Color::create(1.0, 0.0, 0.0), 1.0, 1.0),
+            Vertex::create(-0.5, 0.5, 0.5, Color::create(1.0, 0.0, 0.0),0.0, 1.0),
 
             // bottom
-            Vertex::create(-0.5, -0.5, 0.5, Color::create(0.2, 0.2, 0.2), 0.0, 0.0),
-            Vertex::create(0.5, -0.5, 0.5, Color::create(0.2, 0.2, 0.2), 1.0, 0.0),
-            Vertex::create(0.5, -0.5, -0.5, Color::create(0.2, 0.2, 0.2), 1.0, 1.0),
-            Vertex::create(-0.5, -0.5, -0.5, Color::create(0.2, 0.2, 0.2), 0.0, 1.0),
+            Vertex::create(-0.5, -0.5, 0.5, Color::create(1.0, 0.5, 0.0), 0.0, 0.0),
+            Vertex::create(0.5, -0.5, 0.5, Color::create(1.0, 0.5, 0.0), 1.0, 0.0),
+            Vertex::create(0.5, -0.5, -0.5, Color::create(1.0, 0.5, 0.0), 1.0, 1.0),
+            Vertex::create(-0.5, -0.5, -0.5, Color::create(1.0, 0.5, 0.0), 0.0, 1.0),
 
             // front
-            Vertex::create(-0.5, -0.5, -0.5, Color::create(0.8, 0.2, 0.2), 0.0, 0.0),
-            Vertex::create(0.5, -0.5, -0.5, Color::create(0.8, 0.2, 0.2), 1.0, 0.0),
-            Vertex::create(0.5, 0.5, -0.5, Color::create(0.8, 0.2, 0.2), 1.0, 1.0),
-            Vertex::create(-0.5, 0.5, -0.5, Color::create(0.8, 0.2, 0.2), 0.0, 1.0),
+            Vertex::create(-0.5, -0.5, -0.5, Color::create(1.0, 0.5, 0.0), 0.0, 0.0),
+            Vertex::create(0.5, -0.5, -0.5, Color::create(1.0, 0.5, 0.0), 1.0, 0.0),
+            Vertex::create(0.5, 0.5, -0.5, Color::create(1.0, 0.0, 0.0), 1.0, 1.0),
+            Vertex::create(-0.5, 0.5, -0.5, Color::create(1.0, 0.0, 0.0), 0.0, 1.0),
 
             // back
-            Vertex::create(0.5, -0.5, 0.5, Color::create(0.2, 0.8, 0.2), 0.0, 0.0),
-            Vertex::create(-0.5, -0.5, 0.5, Color::create(0.2, 0.8, 0.2), 1.0, 0.0),
-            Vertex::create(-0.5, 0.5, 0.5, Color::create(0.2, 0.8, 0.2), 1.0, 1.0),
-            Vertex::create(0.5, 0.5, 0.5, Color::create(0.2, 0.8, 0.2), 0.0, 1.0),
+            Vertex::create(0.5, -0.5, 0.5, Color::create(1.0, 0.5, 0.0), 0.0, 0.0),
+            Vertex::create(-0.5, -0.5, 0.5, Color::create(1.0, 0.5, 0.0), 1.0, 0.0),
+            Vertex::create(-0.5, 0.5, 0.5, Color::create(1.0, 0.0, 0.0), 1.0, 1.0),
+            Vertex::create(0.5, 0.5, 0.5, Color::create(1.0, 0.0, 0.0), 0.0, 1.0),
 
             // left
-            Vertex::create(-0.5, -0.5, 0.5, Color::create(0.8, 0.8, 0.2), 0.0, 0.0),
-            Vertex::create(-0.5, -0.5, -0.5, Color::create(0.8, 0.8, 0.2), 1.0, 0.0),
-            Vertex::create(-0.5, 0.5, -0.5, Color::create(0.8, 0.8, 0.2), 1.0, 1.0),
-            Vertex::create(-0.5, 0.5, 0.5, Color::create(0.8, 0.8, 0.2), 0.0, 1.0),
+            Vertex::create(-0.5, -0.5, 0.5, Color::create(1.0, 0.5, 0.0), 0.0, 0.0),
+            Vertex::create(-0.5, -0.5, -0.5, Color::create(1.0, 0.5, 0.0), 1.0, 0.0),
+            Vertex::create(-0.5, 0.5, -0.5, Color::create(1.0, 0.0, 0.0), 1.0, 1.0),
+            Vertex::create(-0.5, 0.5, 0.5, Color::create(1.0, 0.0, 0.0), 0.0, 1.0),
 
             // right
-            Vertex::create(0.5, -0.5, -0.5, Color::create(0.2, 0.2, 0.8), 0.0, 0.0),
-            Vertex::create(0.5, -0.5, 0.5, Color::create(0.2, 0.2, 0.8), 1.0, 0.0),
-            Vertex::create(0.5, 0.5, 0.5, Color::create(0.2, 0.2, 0.8), 1.0, 1.0),
-            Vertex::create(0.5, 0.5, -0.5, Color::create(0.2, 0.2, 0.8), 0.0, 1.0),
+            Vertex::create(0.5, -0.5, -0.5, Color::create(1.0, 0.5, 0.0), 0.0, 0.0),
+            Vertex::create(0.5, -0.5, 0.5, Color::create(1.0, 0.5, 0.0), 1.0, 0.0),
+            Vertex::create(0.5, 0.5, 0.5, Color::create(1.0, 0.0, 0.0), 1.0, 1.0),
+            Vertex::create(0.5, 0.5, -0.5, Color::create(1.0, 0.0, 0.0), 0.0, 1.0),
         ];
 
         cube.indices = vec!
@@ -168,6 +191,8 @@ impl Mesh
         ];
 
         cube.parts = vec![Part::create(Topology::TRIANGLE, 0, 12)];
+
+        cube.calculate_normals(true);
 
         cube
     }
